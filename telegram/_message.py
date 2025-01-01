@@ -4506,7 +4506,7 @@ class Message(MaybeInaccessibleMessage):
             api_kwargs=api_kwargs,
         )
 
-    def parse_entity(self, entity: MessageEntity) -> str:
+    def parse_entity(self, entity: MessageEntity | str) -> str | list[str]:
         """Returns the text from a given :class:`telegram.MessageEntity`.
 
         Note:
@@ -4527,6 +4527,19 @@ class Message(MaybeInaccessibleMessage):
         """
         if not self.text:
             raise RuntimeError("This Message has no 'text'.")
+        
+        if isinstance(entity, str): # likely MessageEntity.BOT_COMMAND or similar constant
+
+                o: list[str]
+                
+                # try and get the correct MessageEntity from the string
+                for i in self.entities:
+                     
+                    if i.type == entity:
+                         
+                        o.append( parse_message_entity(self.text, entity) )
+                
+                return o
 
         return parse_message_entity(self.text, entity)
 

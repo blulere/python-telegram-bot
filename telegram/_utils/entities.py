@@ -40,6 +40,12 @@ def parse_message_entity(text: str, entity: MessageEntity) -> str:
     Returns:
         :obj:`str`: The text of the given entity.
     """
+
+    if isinstance(entity, str):
+        
+        # raise error for the mistake of passing MessageEntityType instead of MessageEntity, non-breaking
+        raise TypeError(f"The MessageEntity sent must be of the class 'telegram.MessageEntity' (can be found in the list message.entities), not of a MessageEntityType; did you pass something similar to 'MessageEntity.BOT_COMMAND'?")
+
     entity_text = text.encode(TextEncoding.UTF_16_LE)
     entity_text = entity_text[entity.offset * 2 : (entity.offset + entity.length) * 2]
 
